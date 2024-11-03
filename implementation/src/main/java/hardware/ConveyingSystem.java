@@ -1,2 +1,4 @@
-package hardware;public class ConveyingSystem {
+package hardware;
+
+public class ConveyingSystem {
 }

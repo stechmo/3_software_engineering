@@ -1,4 +1,4 @@
-package hardware;
+package ui;
 
 public enum LED {
     RED,

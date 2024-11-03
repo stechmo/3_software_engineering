@@ -1,2 +1,9 @@
-package hardware;public class Bin {
+package hardware;
+
+import item.Item;
+
+public class Bin {
+    private void trashItem(Item item) {
+        ;
+    }
 }
