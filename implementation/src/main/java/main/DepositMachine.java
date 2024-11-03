@@ -6,6 +6,7 @@ import hardware.FeedChute;
 import hardware.LedElement;
 import hardware.Reader;
 import item.Item;
+import smartphone.Smartphone;
 import ui.Display;
 
 public class DepositMachine {
@@ -29,6 +30,10 @@ public class DepositMachine {
 
     public void readCard(String code) {
         this.reader.readCard(code);
+    }
+
+    public void readSmartphone(Smartphone smartphone) {
+        this.reader.readSmartphone(smartphone);
     }
 
     public void insertItem(Item item, int angle) {

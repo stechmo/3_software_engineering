@@ -4,22 +4,24 @@ import hardware.FeedChute;
 import hardware.LedElement;
 import item.Item;
 import other.State;
+import smartphone.Smartphone;
 import ui.Button;
-import ui.LED;
 import ui.Display;
+import ui.LED;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class MainUnit {
     private List<String> workerIDs;
     private State state;
-    private Display display;
-    private LedElement led;
-    private FeedChute feedChute;
-    private InMemoryDatabase inMemoryDatabase;
+    private final Display display;
+    private final LedElement led;
+    private final FeedChute feedChute;
+    private final InMemoryDatabase inMemoryDatabase;
     private int insertedItems;
     private int acceptedItems;
     private int disposableItems;
@@ -30,7 +32,8 @@ public class MainUnit {
     private double totalAmount;
     private String receipt;
     private int seq;
-    private int hashCode;
+    private final int hashCode;
+    private List<String> donations;
 
     public MainUnit(InMemoryDatabase inMemoryDatabase, LedElement led, Display display, FeedChute feedChute, int hashCode) {
         this.workerIDs = Arrays.asList("AAA", "AAB", "AAC");
@@ -39,16 +42,10 @@ public class MainUnit {
         this.feedChute = feedChute;
         this.inMemoryDatabase = inMemoryDatabase;
         setLocked("Locked");
-        this.insertedItems =  0;
-        this.acceptedItems = 0;
-        this.disposableItems = 0;
-        this.reusableItems = 0;
-        this.nonAcceptedItems = 0;
-        this.disposableAmount = 0;
-        this.reusableAmount = 0;
-        this.totalAmount = 0;
+        resetUnit();
         this.seq = 0;
         this.hashCode = hashCode;
+        this.donations = new ArrayList<>();
     }
 
     public void insertItem(Item item) {
@@ -72,9 +69,9 @@ public class MainUnit {
                         if (itemInfos.getMaterialType() == "Metal") {
                             this.disposableItems++;
                             this.disposableAmount += itemInfos.getDepositAmount();
-                        //komprimieren
+                            //komprimieren
                         } else {
-                            if(itemInfos.getRecyclingType() == "Reusable") {
+                            if (itemInfos.getRecyclingType() == "Reusable") {
                                 this.reusableItems++;
                                 this.reusableAmount += itemInfos.getDepositAmount();
                                 //mehrweg-Schritt
@@ -105,7 +102,7 @@ public class MainUnit {
     }
 
     public void removeItem() {
-        if(this.totalAmount == 0) {
+        if (this.totalAmount == 0) {
             setReady("Ready");
         } else {
             setReady("Possible action:");
@@ -139,10 +136,38 @@ public class MainUnit {
                 "#reusable: " + this.reusableItems + " (" + this.reusableAmount + " €)\n" +
                 "#non-accepted items: " + this.nonAcceptedItems + "\n" +
                 "> total: " + this.totalAmount + " €";
-        
+
         this.display.print("Possible actions:");
         this.display.setButton1(Button.DONATION);
         this.display.setButton2(Button.DEPOSIT_RECEIPT);
+    }
+
+    public void donate() {
+        this.donations.add(this.receipt);
+        resetUnit();
+    }
+
+    public void depositReceipt() {
+        setWaiting("place your smartphone on reader");
+    }
+
+    public void readSmartphone(Smartphone smartphone) {
+        smartphone.addReceipt(this.receipt);
+        resetUnit();
+    }
+
+    private void resetUnit() {
+        this.display.setButton1(null);
+        this.display.setButton2(null);
+        this.insertedItems=0;
+        this.acceptedItems=0;
+        this.disposableItems=0;
+        this.reusableItems=0;
+        this.nonAcceptedItems=0;
+        this.disposableAmount=0;
+        this.reusableAmount=0;
+        this.totalAmount=0;
+        setReady("Ready");
     }
 
     private void setReady(String message) {

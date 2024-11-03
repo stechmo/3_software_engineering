@@ -1,6 +1,7 @@
 package hardware;
 
 import core.MainUnit;
+import smartphone.Smartphone;
 
 public class Reader {
     private MainUnit mainUnit;
@@ -11,5 +12,9 @@ public class Reader {
 
     public void readCard(String code) {
         this.mainUnit.changeStatus(code);
+    }
+
+    public void readSmartphone(Smartphone smartphone) {
+        this.mainUnit.readSmartphone(smartphone);
     }
 }

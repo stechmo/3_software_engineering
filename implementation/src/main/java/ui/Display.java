@@ -26,7 +26,12 @@ public class Display {
     public void executeButton1() {
         switch (button1) {
             case Button.FINISH -> this.mainUnit.finish();
+            case Button.DONATION -> this.mainUnit.donate();
         }
+    }
+
+    public void executeButton2() {
+        if (button2 == Button.DEPOSIT_RECEIPT) this.mainUnit.depositReceipt();
     }
 
     private void printButton(Button button) {
