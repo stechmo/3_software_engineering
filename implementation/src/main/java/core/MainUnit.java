@@ -1,13 +1,15 @@
 package core;
 
 import hardware.FeedChute;
-import hardware.LedElement;
 import item.Item;
+import item.MaterialType;
+import item.RecyclingType;
 import other.State;
 import smartphone.Smartphone;
 import ui.Button;
 import ui.Display;
 import ui.LED;
+import ui.LedElement;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -66,17 +68,17 @@ public class MainUnit {
                         this.nonAcceptedItems++;
                     } else {
                         this.acceptedItems++;
-                        if (itemInfos.getMaterialType() == "Metal") {
+                        if (itemInfos.getMaterialType() == MaterialType.METAL) {
                             this.disposableItems++;
                             this.disposableAmount += itemInfos.getDepositAmount();
                             //komprimieren
                         } else {
-                            if (itemInfos.getRecyclingType() == "Reusable") {
+                            if (itemInfos.getRecyclingType() == RecyclingType.REUSABLE) {
                                 this.reusableItems++;
                                 this.reusableAmount += itemInfos.getDepositAmount();
                                 //mehrweg-Schritt
 
-                            } else if (itemInfos.getRecyclingType() == "Deposable") {
+                            } else if (itemInfos.getRecyclingType() == RecyclingType.DISPOSABLE) {
                                 this.disposableItems++;
                                 this.disposableAmount += itemInfos.getDepositAmount();
                                 //zerkleinern
@@ -85,7 +87,7 @@ public class MainUnit {
                     }
                     this.totalAmount += itemInfos.getDepositAmount();
                     setReady(itemInfos.getLabel() + " | "
-                            + itemInfos.getRecyclingType() + " | "
+                            + itemInfos.getRecyclingType().getType() + " | "
                             + itemInfos.getDepositAmount() + " | "
                             + this.insertedItems + " | "
                             + this.acceptedItems + " | "
@@ -104,7 +106,7 @@ public class MainUnit {
     public void removeItem() {
         if (this.totalAmount == 0) {
             setReady("Ready");
-        } else {
+        } else if (this.totalAmount > 0) {
             setReady("Possible action:");
             this.display.setButton1(Button.FINISH);
         }
@@ -159,14 +161,14 @@ public class MainUnit {
     private void resetUnit() {
         this.display.setButton1(null);
         this.display.setButton2(null);
-        this.insertedItems=0;
-        this.acceptedItems=0;
-        this.disposableItems=0;
-        this.reusableItems=0;
-        this.nonAcceptedItems=0;
-        this.disposableAmount=0;
-        this.reusableAmount=0;
-        this.totalAmount=0;
+        this.insertedItems = 0;
+        this.acceptedItems = 0;
+        this.disposableItems = 0;
+        this.reusableItems = 0;
+        this.nonAcceptedItems = 0;
+        this.disposableAmount = 0;
+        this.reusableAmount = 0;
+        this.totalAmount = 0;
         setReady("Ready");
     }
 

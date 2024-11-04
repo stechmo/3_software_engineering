@@ -3,7 +3,7 @@ package main;
 import core.InMemoryDatabase;
 import core.MainUnit;
 import hardware.FeedChute;
-import hardware.LedElement;
+import ui.LedElement;
 import hardware.Reader;
 import item.Item;
 import smartphone.Smartphone;

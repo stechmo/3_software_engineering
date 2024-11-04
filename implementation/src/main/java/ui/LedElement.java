@@ -1,4 +1,4 @@
-package hardware;
+package ui;
 
 import lombok.Setter;
 import ui.LED;

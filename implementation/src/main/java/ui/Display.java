@@ -35,10 +35,6 @@ public class Display {
     }
 
     private void printButton(Button button) {
-        switch (button) {
-            case Button.FINISH -> System.out.println("Finish");
-            case Button.DONATION -> System.out.println("Donation");
-            case Button.DEPOSIT_RECEIPT -> System.out.println("Deposit receipt");
-        }
+        System.out.println(button.getText());
     }
 }
