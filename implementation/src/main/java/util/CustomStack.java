@@ -1,18 +1,42 @@
 package util;
 
 import java.util.ArrayList;
-public class CustomStack<E> extends ArrayList<E>{
-    public E pop() {
-        E e = get(size() - 1);
-        remove(size() - 1);
-        return e;
+import java.util.Arrays;
+
+public class CustomStack<E>{
+    private int size = 0;
+    private Object[] elements;
+
+    public CustomStack(int size) {
+        elements = new Object[size];
     }
 
     public void push(E e) {
-        add(e);
+        if (size == elements.length) {
+            ensureCapacity();
+        }
+        elements[size++] = e;
     }
 
-    public E top(){
-        return get(size() - 1);
+    @SuppressWarnings("unchecked")
+    public E pop() {
+        E e = (E) elements[--size];
+        elements[size] = null;
+        return e;
+    }
+
+    public E peek() {
+        @SuppressWarnings("unchecked")
+        E e = (E) elements[size - 1];
+        return e;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    private void ensureCapacity() {
+        int newSize = elements.length * 2;
+        elements = Arrays.copyOf(elements, newSize);
     }
 }
