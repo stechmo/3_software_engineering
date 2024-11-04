@@ -2,7 +2,9 @@ package main;
 
 import core.InMemoryDatabase;
 import core.MainUnit;
+import hardware.ConveyingSystem;
 import hardware.FeedChute;
+import processing.ItemProcessor;
 import ui.LedElement;
 import hardware.Reader;
 import item.Item;
@@ -16,12 +18,14 @@ public class DepositMachine {
     private Display display;
     private FeedChute feedChute;
     private MainUnit mainUnit;
+    private ConveyingSystem conveyingSystem;
 
-    public DepositMachine() {
+    public DepositMachine(ItemProcessor disposableCanProcessor, ItemProcessor disposableBottleProcessor, ItemProcessor reusableBottleProcessor) {
         this.inMemoryDatabase = new InMemoryDatabase();
         this.ledElement = new LedElement();
         this.display = new Display();
-        this.feedChute = new FeedChute();
+        this.conveyingSystem = new ConveyingSystem(disposableCanProcessor, disposableBottleProcessor, reusableBottleProcessor);
+        this.feedChute = new FeedChute(this.conveyingSystem);
         this.mainUnit = new MainUnit(this.inMemoryDatabase, this.ledElement, this.display, this.feedChute, this.hashCode());
         this.display.setMainUnit(this.mainUnit);
         this.feedChute.setMainUnit(this.mainUnit);

@@ -71,17 +71,16 @@ public class MainUnit {
                         if (itemInfos.getMaterialType() == MaterialType.METAL) {
                             this.disposableItems++;
                             this.disposableAmount += itemInfos.getDepositAmount();
-                            //komprimieren
+                            this.feedChute.moveItemToDisposableCanProcessor();
                         } else {
                             if (itemInfos.getRecyclingType() == RecyclingType.REUSABLE) {
                                 this.reusableItems++;
                                 this.reusableAmount += itemInfos.getDepositAmount();
-                                //mehrweg-Schritt
-
+                                this.feedChute.moveItemToReusableBottleProcessor();
                             } else if (itemInfos.getRecyclingType() == RecyclingType.DISPOSABLE) {
                                 this.disposableItems++;
                                 this.disposableAmount += itemInfos.getDepositAmount();
-                                //zerkleinern
+                                this.feedChute.moveItemToDisposableBottleProcessor();
                             }
                         }
                     }

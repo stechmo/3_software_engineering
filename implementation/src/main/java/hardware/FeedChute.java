@@ -15,33 +15,53 @@ public class FeedChute {
     private RotationUnit rotationUnit;
     private Scanner scanner;
     private MainUnit mainUnit;
+    private ConveyingSystem conveyingSystem;
 
-    public FeedChute() {
+    public FeedChute(ConveyingSystem conveyingSystem) {
         this.rotationUnit = new RotationUnit();
         this.scanner = new Scanner();
+        this.conveyingSystem = conveyingSystem;
     }
+
     public void insertItem(Item item, int angle) {
         this.currentItem = item;
         this.currentAngle = angle;
         this.mainUnit.insertItem(item);
     }
+
     public Item removeItem() {
         Item item = this.currentItem;
         this.currentItem = null;
         this.mainUnit.removeItem();
         return item;
     }
+
     public void turnItem() {
-        this.currentAngle=this.rotationUnit.turn(this.currentAngle);
+        this.currentAngle = this.rotationUnit.turn(this.currentAngle);
     }
+
     public String scanItem() {
         int indexSide = this.currentAngle / 90;
         Side side = this.currentItem.getSides()[indexSide];
         if (side instanceof BackSide) {
-            return this.scanner.scanItem((BackSide)this.currentItem.getSides()[2]);
-        }
-        else {
+            return this.scanner.scanItem((BackSide) this.currentItem.getSides()[2]);
+        } else {
             return null;
         }
+    }
+
+    public void moveItemToDisposableCanProcessor() {
+        this.conveyingSystem.processDisposableCan(this.currentItem);
+        this.currentItem = null;
+    }
+
+    public void moveItemToDisposableBottleProcessor() {
+        this.conveyingSystem.processDisposableBottle(this.currentItem);
+        this.currentItem = null;
+    }
+
+    public void moveItemToReusableBottleProcessor() {
+        this.conveyingSystem.processReusableBottle(this.currentItem);
+        this.currentItem = null;
     }
 }
