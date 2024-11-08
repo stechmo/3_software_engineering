@@ -1,9 +1,8 @@
 package main;
 
-import core.DepositItem;
+import core.Database;
 import hardware.Bin;
-import item.Bottle;
-import item.Can;
+import item.*;
 import processing.ItemProcessor;
 
 public class Application {
@@ -14,9 +13,12 @@ public class Application {
         ItemProcessor reusableBottleProcessor = new ItemProcessor();
         DepositMachine depositMachine = new DepositMachine(disposableCanProcessor, disposableBottleProcessor, reusableBottleProcessor);
         depositMachine.readCard("AAA");
-        depositMachine.insertItem(new Can(DepositItem.R8YZ7CLKZ4.getLabel(), DepositItem.R8YZ7CLKZ4.getBarcode()), 270);
-        depositMachine.insertItem(new Can(DepositItem.R8YZ7CLKZ4.getLabel(), "8YZ7CLKZ4f"), 270);
+        Item item = Database.INSTANCE.getDatabaseItemByBarcode("R8YZ7CLKZ4");
+        depositMachine.insertItem(new Can(((FrontSide) item.getSides()[0]).getLabel().getInscription(), ((BackSide) item.getSides()[2]).getBarcode(), item.getRecyclingType(), item.getMaterialType(), item.getDepositAmount()), 270);
+        depositMachine.insertItem(new Can("Blabla", "8YZ7CLKZ4f", RecyclingType.REUSABLE, MaterialType.GLASS, 4.50), 270);
         bin.throwItemIntoBin(depositMachine.removeItem());
+        item = Database.INSTANCE.getDatabaseItemByBarcode("XVJIX0XAUE");
+        depositMachine.insertItem(new Bottle(((FrontSide) item.getSides()[0]).getLabel().getInscription(), ((BackSide) item.getSides()[2]).getBarcode(), item.getRecyclingType(), item.getMaterialType(), item.getDepositAmount()), 270);
         depositMachine.pressButton1();
         depositMachine.pressButton1();
     }

@@ -1,6 +1,7 @@
 package core;
 
 import hardware.FeedChute;
+import item.FrontSide;
 import item.Item;
 import item.MaterialType;
 import item.RecyclingType;
@@ -23,7 +24,6 @@ public class MainUnit {
     private final Display display;
     private final LedElement led;
     private final FeedChute feedChute;
-    private final InMemoryDatabase inMemoryDatabase;
     private int insertedItems;
     private int acceptedItems;
     private int disposableItems;
@@ -37,12 +37,11 @@ public class MainUnit {
     private final int hashCode;
     private List<String> donations;
 
-    public MainUnit(InMemoryDatabase inMemoryDatabase, LedElement led, Display display, FeedChute feedChute, int hashCode) {
+    public MainUnit(LedElement led, Display display, FeedChute feedChute, int hashCode) {
         this.workerIDs = Arrays.asList("AAA", "AAB", "AAC");
         this.display = display;
         this.led = led;
         this.feedChute = feedChute;
-        this.inMemoryDatabase = inMemoryDatabase;
         setLocked("Locked");
         resetUnit();
         this.seq = 0;
@@ -59,35 +58,35 @@ public class MainUnit {
             }
             String barcode = this.feedChute.scanItem();
             if (barcode != null) {
-                DepositItem itemInfos = this.inMemoryDatabase.getItemByBarcode(barcode);
-                if (itemInfos == null) {
+                Item databaseItem = Database.INSTANCE.getDatabaseItemByBarcode(barcode);
+                if (databaseItem == null) {
                     setWaiting("Please remove item from insertion slot.");
                 } else {
                     this.insertedItems++;
-                    if (itemInfos.getDepositAmount() == 0) {
+                    if (databaseItem.getDepositAmount() == 0) {
                         this.nonAcceptedItems++;
                     } else {
                         this.acceptedItems++;
-                        if (itemInfos.getMaterialType() == MaterialType.METAL) {
+                        if (databaseItem.getMaterialType() == MaterialType.METAL) {
                             this.disposableItems++;
-                            this.disposableAmount += itemInfos.getDepositAmount();
+                            this.disposableAmount += databaseItem.getDepositAmount();
                             this.feedChute.moveItemToDisposableCanProcessor();
                         } else {
-                            if (itemInfos.getRecyclingType() == RecyclingType.REUSABLE) {
+                            if (databaseItem.getRecyclingType() == RecyclingType.REUSABLE) {
                                 this.reusableItems++;
-                                this.reusableAmount += itemInfos.getDepositAmount();
+                                this.reusableAmount += databaseItem.getDepositAmount();
                                 this.feedChute.moveItemToReusableBottleProcessor();
-                            } else if (itemInfos.getRecyclingType() == RecyclingType.DISPOSABLE) {
+                            } else if (databaseItem.getRecyclingType() == RecyclingType.DISPOSABLE) {
                                 this.disposableItems++;
-                                this.disposableAmount += itemInfos.getDepositAmount();
+                                this.disposableAmount += databaseItem.getDepositAmount();
                                 this.feedChute.moveItemToDisposableBottleProcessor();
                             }
                         }
                     }
-                    this.totalAmount += itemInfos.getDepositAmount();
-                    setReady(itemInfos.getLabel() + " | "
-                            + itemInfos.getRecyclingType().getType() + " | "
-                            + itemInfos.getDepositAmount() + " | "
+                    this.totalAmount += databaseItem.getDepositAmount();
+                    setReady(((FrontSide) databaseItem.getSides()[0]).getLabel().getInscription() + " | "
+                            + databaseItem.getRecyclingType().getType() + " | "
+                            + databaseItem.getDepositAmount() + " | "
                             + this.insertedItems + " | "
                             + this.acceptedItems + " | "
                             + this.disposableItems + " | "

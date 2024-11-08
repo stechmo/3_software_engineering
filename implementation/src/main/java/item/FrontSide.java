@@ -1,5 +1,8 @@
 package item;
 
+import lombok.Getter;
+
+@Getter
 public class FrontSide extends Side {
     private final Label label;
 
