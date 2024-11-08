@@ -58,7 +58,7 @@ public class MainUnit {
             }
             String barcode = this.feedChute.scanItem();
             if (barcode != null) {
-                Item databaseItem = Database.INSTANCE.getDatabaseItemByBarcode(barcode);
+                DatabaseItem databaseItem = Database.INSTANCE.getDatabaseItemByBarcode(barcode);
                 if (databaseItem == null) {
                     setWaiting("Please remove item from insertion slot.");
                 } else {
@@ -84,7 +84,7 @@ public class MainUnit {
                         }
                     }
                     this.totalAmount += databaseItem.getDepositAmount();
-                    setReady(((FrontSide) databaseItem.getSides()[0]).getLabel().getInscription() + " | "
+                    setReady( databaseItem.getInscription() + " | "
                             + databaseItem.getRecyclingType().getType() + " | "
                             + databaseItem.getDepositAmount() + " | "
                             + this.insertedItems + " | "
@@ -97,6 +97,8 @@ public class MainUnit {
                     this.display.print("Possible action:");
                     this.display.setButton1(Button.FINISH);
                 }
+            } else {
+                setWaiting("Please remove item from insertion slot.");
             }
         }
     }

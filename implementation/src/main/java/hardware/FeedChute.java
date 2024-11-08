@@ -42,12 +42,18 @@ public class FeedChute {
 
     public String scanItem() {
         int indexSide = this.currentAngle / 90;
-        Side side = this.currentItem.getSides()[indexSide];
-        if (side instanceof BackSide) {
-            return this.scanner.scanItem((BackSide) this.currentItem.getSides()[2]);
+        Side[] sides = this.currentItem.getSides();
+        if (sides != null) {
+            Side side = this.currentItem.getSides()[indexSide];
+            if (side instanceof BackSide) {
+                return this.scanner.scanItem((BackSide) this.currentItem.getSides()[2]);
+            } else {
+                return null;
+            }
         } else {
             return null;
         }
+
     }
 
     public void moveItemToDisposableCanProcessor() {
