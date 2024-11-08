@@ -3,8 +3,8 @@ package item;
 import lombok.Getter;
 
 @Getter
-public class Item {
-    private Side[] sides;
+public abstract class Item {
+    protected Side[] sides;
 
     public Item(String inscription, String barcode) {
         this.sides = new Side[]{

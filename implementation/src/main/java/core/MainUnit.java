@@ -53,7 +53,7 @@ public class MainUnit {
     public void insertItem(Item item) {
         if (this.state == State.READY) {
             setLocked("Processing item | please wait.");
-            this.display.setButton1(null);
+            this.display.setButton1(Button.EMPTY);
             while (this.feedChute.getCurrentAngle() != 180) {
                 this.feedChute.turnItem();
             }
@@ -103,6 +103,7 @@ public class MainUnit {
     }
 
     public void removeItem() {
+        System.out.println("item is removed");
         if (this.totalAmount == 0) {
             setReady("Ready");
         } else if (this.totalAmount > 0) {
@@ -128,7 +129,8 @@ public class MainUnit {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
         String formattedDateTime = now.format(formatter);
 
-        this.receipt = "Seq: " + this.seq + "\n" +
+        this.receipt = "-----------Receipt-----------" +
+                "Seq: " + this.seq + "\n" +
                 formattedDateTime + "\n" +
                 "Serialnumber: " + this.hashCode + "\n" +
                 "#inserted items: " + this.insertedItems + "\n" +
@@ -136,7 +138,8 @@ public class MainUnit {
                 "#disposable: " + this.disposableItems + " (" + this.disposableAmount + " €)\n" +
                 "#reusable: " + this.reusableItems + " (" + this.reusableAmount + " €)\n" +
                 "#non-accepted items: " + this.nonAcceptedItems + "\n" +
-                "> total: " + this.totalAmount + " €";
+                "> total: " + this.totalAmount + " €\n" +
+                "-----------Receipt-----------";
 
         this.display.print("Possible actions:");
         this.display.setButton1(Button.DONATION);
@@ -145,7 +148,9 @@ public class MainUnit {
 
     public void donate() {
         this.donations.add(this.receipt);
+        System.out.println(this.receipt);
         resetUnit();
+        setReady("Ready");
     }
 
     public void depositReceipt() {
@@ -154,12 +159,14 @@ public class MainUnit {
 
     public void readSmartphone(Smartphone smartphone) {
         smartphone.addReceipt(this.receipt);
+        System.out.println(this.receipt);
         resetUnit();
+        setReady("Ready");
     }
 
     private void resetUnit() {
-        this.display.setButton1(null);
-        this.display.setButton2(null);
+        this.display.setButton1(Button.EMPTY);
+        this.display.setButton2(Button.EMPTY);
         this.insertedItems = 0;
         this.acceptedItems = 0;
         this.disposableItems = 0;
@@ -168,7 +175,6 @@ public class MainUnit {
         this.disposableAmount = 0;
         this.reusableAmount = 0;
         this.totalAmount = 0;
-        setReady("Ready");
     }
 
     private void setReady(String message) {

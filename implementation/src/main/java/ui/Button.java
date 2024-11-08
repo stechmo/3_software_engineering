@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum Button {
     FINISH("Finish"),
     DONATION("Donate"),
-    DEPOSIT_RECEIPT("Deposit receipt");
+    DEPOSIT_RECEIPT("Deposit receipt"),
+    EMPTY("empty");
 
     private String text;
 

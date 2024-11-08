@@ -43,4 +43,16 @@ public class DepositMachine {
     public void insertItem(Item item, int angle) {
         this.feedChute.insertItem(item, angle);
     }
+
+    public Item removeItem() {
+        return this.feedChute.removeItem();
+    }
+
+    public void pressButton1() {
+        this.display.executeButton1();
+    }
+
+    public void pressButton2() {
+        this.display.executeButton2();
+    }
 }
